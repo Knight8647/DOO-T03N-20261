@@ -40,7 +40,28 @@ public class CalculadoraSwing extends JFrame
         setTitle("Calculadora");
         setSize(400, 600);
 
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+
+        addWindowListener(new WindowAdapter() {
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+
+                int resposta = JOptionPane.showConfirmDialog(
+                        null,
+                        "Deseja realmente sair?",
+                        "Confirmar saida",
+                        JOptionPane.YES_NO_OPTION
+                );
+
+                if (resposta == JOptionPane.YES_OPTION) {
+
+                    dispose();
+
+                    System.exit(0);
+                }
+            }
+        });
 
         setLocationRelativeTo(null);
 
