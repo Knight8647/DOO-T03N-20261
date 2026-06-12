@@ -46,7 +46,7 @@ public class TelaClima extends JFrame {
             Clima clima = service.buscarClima(cidade);
 
             areaResultado.setText(
-                    "🌤 Clima em: " + cidade + "\n\n" +
+                    " Clima em: " + cidade + "\n\n" +
                             "Temperatura atual: " + clima.getTemperaturaAtual() + "°C\n" +
                             "Máxima: " + clima.getTemperaturaMaxima() + "°C\n" +
                             "Mínima: " + clima.getTemperaturaMinima() + "°C\n" +
