@@ -1,4 +1,4 @@
-package com.erick.tvtracker.ui;
+package interfaces;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -14,13 +14,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import com.erick.tvtracker.service.UsuarioService;
+import servicos.UsuarioServicos;
 
 public class TelaPrincipal extends JFrame {
 
-    private final UsuarioService usuarioService;
+    private final UsuarioServicos usuarioService;
 
-    public TelaPrincipal(UsuarioService usuarioService) {
+    public TelaPrincipal(UsuarioServicos usuarioService) {
         this.usuarioService = usuarioService;
         configurarJanela();
         construirLayout();
@@ -43,16 +43,16 @@ public class TelaPrincipal extends JFrame {
     }
 
     private void construirLayout() {
-        // painel principal com fundo escuro
+
         JPanel painel = new JPanel(new BorderLayout());
         painel.setBackground(new Color(28, 28, 40));
 
-        // --- cabeçalho ---
+        //cabeçalho
         JPanel cabecalho = new JPanel(new BorderLayout());
         cabecalho.setBackground(new Color(40, 40, 60));
         cabecalho.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
 
-        JLabel lblTitulo = new JLabel("📺❤️ TV Tracker", SwingConstants.CENTER);
+        JLabel lblTitulo = new JLabel("TV Tracker", SwingConstants.CENTER);
         lblTitulo.setFont(new Font("Arial", Font.BOLD, 28));
         lblTitulo.setForeground(new Color(220, 220, 255));
 
@@ -64,14 +64,14 @@ public class TelaPrincipal extends JFrame {
         cabecalho.add(lblTitulo, BorderLayout.CENTER);
         cabecalho.add(lblUsuario, BorderLayout.SOUTH);
 
-        // --- painel de botões ---
+        //painel de botões
         JPanel painelBotoes = new JPanel(new GridLayout(3, 1, 0, 14));
         painelBotoes.setBackground(new Color(28, 28, 40));
         painelBotoes.setBorder(BorderFactory.createEmptyBorder(30, 40, 30, 40));
 
-        JButton btnBuscar = criarBotao("🔍  Buscar Séries", new Color(88, 86, 214));
-        JButton btnListas = criarBotao("📋  Minhas Listas", new Color(52, 120, 180));
-        JButton btnSair   = criarBotao("🚪  Salvar e Sair",  new Color(180, 60, 60));
+        JButton btnBuscar = criarBotao("Buscar Séries", new Color(88, 86, 214));
+        JButton btnListas = criarBotao("Minhas Listas", new Color(52, 120, 180));
+        JButton btnSair   = criarBotao("Salvar e Sair",  new Color(180, 60, 60));
 
         btnBuscar.addActionListener(e -> new TelaBusca(usuarioService).setVisible(true));
         btnListas.addActionListener(e -> new TelaListas(usuarioService).setVisible(true));
@@ -86,7 +86,6 @@ public class TelaPrincipal extends JFrame {
         add(painel);
     }
 
-    // cria um botão estilizado com cor de fundo personalizada
     private JButton criarBotao(String texto, Color cor) {
         JButton btn = new JButton(texto);
         btn.setFont(new Font("Arial", Font.BOLD, 15));

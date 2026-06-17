@@ -1,4 +1,4 @@
-package com.erick.tvtracker.ui;
+package interfaces;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -22,12 +22,12 @@ import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 
-import com.erick.tvtracker.model.Serie;
-import com.erick.tvtracker.service.UsuarioService;
+import objetos.Serie;
+import servicos.UsuarioServicos;
 
 public class TelaListas extends JFrame {
 
-    private final UsuarioService usuarioService;
+    private final UsuarioServicos usuarioService;
 
     private JTabbedPane abas;
     private DefaultListModel<Serie> modeloFavoritos;
@@ -42,7 +42,7 @@ public class TelaListas extends JFrame {
     private static final Color TEXTO_CLARO    = new Color(220, 220, 255);
     private static final Color TEXTO_SECUNDARIO = new Color(160, 160, 200);
 
-    public TelaListas(UsuarioService usuarioService) {
+    public TelaListas(UsuarioServicos usuarioService) {
         this.usuarioService = usuarioService;
         configurarJanela();
         construirLayout();
@@ -64,7 +64,7 @@ public class TelaListas extends JFrame {
         painel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         // --- cabeçalho ---
-        JLabel lblTitulo = new JLabel("📋  Minhas Listas", SwingConstants.LEFT);
+        JLabel lblTitulo = new JLabel("Minhas Listas", SwingConstants.LEFT);
         lblTitulo.setFont(new Font("Arial", Font.BOLD, 20));
         lblTitulo.setForeground(TEXTO_CLARO);
         lblTitulo.setBorder(BorderFactory.createEmptyBorder(0, 0, 8, 0));
@@ -74,9 +74,9 @@ public class TelaListas extends JFrame {
         abas.setBackground(BG_MEDIO);
         abas.setForeground(TEXTO_CLARO);
         abas.setFont(new Font("Arial", Font.BOLD, 13));
-        abas.addTab("⭐ Favoritos",      criarPainelLista("favoritos"));
-        abas.addTab("✅ Já Assisti",     criarPainelLista("assistidas"));
-        abas.addTab("🎯 Quero Assistir", criarPainelLista("queroAssistir"));
+        abas.addTab("Favoritos",      criarPainelLista("favoritos"));
+        abas.addTab("Já Assisti",     criarPainelLista("assistidas"));
+        abas.addTab("Quero Assistir", criarPainelLista("queroAssistir"));
 
         // --- painel inferior ---
         JPanel painelInferior = new JPanel(new BorderLayout(0, 8));
@@ -135,19 +135,18 @@ public class TelaListas extends JFrame {
         jList.setBackground(BG_MEDIO);
         jList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        // renderer elegante com nome, status, datas e nota
         jList.setCellRenderer((list, serie, index, isSelected, cellHasFocus) -> {
             JPanel item = new JPanel(new BorderLayout(8, 2));
             item.setBorder(BorderFactory.createEmptyBorder(8, 12, 8, 12));
             item.setBackground(isSelected ? BG_SELECIONADO : (index % 2 == 0 ? BG_ITEM : BG_MEDIO));
 
-            JLabel nome = new JLabel(serie.getName());
+            JLabel nome = new JLabel(serie.getNome());
             nome.setFont(new Font("Arial", Font.BOLD, 13));
             nome.setForeground(TEXTO_CLARO);
 
             JLabel info = new JLabel(
-                serie.getStatus() + "  •  Estreia: " + serie.getPremiered() +
-                "  •  Fim: " + serie.getEnded() + "  •  Nota: " + String.format("%.1f", serie.getRating())
+                serie.getStatus() + "  •  Estreia: " + serie.getEstreia() +
+                "  •  Fim: " + serie.getFim() + "  •  Nota: " + String.format("%.1f", serie.getNota())
             );
             info.setFont(new Font("Arial", Font.PLAIN, 11));
             info.setForeground(TEXTO_SECUNDARIO);
@@ -168,7 +167,7 @@ public class TelaListas extends JFrame {
         scroll.setBorder(BorderFactory.createLineBorder(new Color(60, 60, 80)));
         scroll.getViewport().setBackground(BG_MEDIO);
 
-        JButton btnRemover = criarBotao("🗑  Remover da lista", new Color(160, 50, 50));
+        JButton btnRemover = criarBotao("Remover da lista", new Color(160, 50, 50));
         btnRemover.addActionListener(e -> removerDaLista(tipoLista, jList, modelo));
 
         painel.add(scroll, BorderLayout.CENTER);
@@ -178,8 +177,8 @@ public class TelaListas extends JFrame {
 
     private void carregarListas() {
         carregarModelo(modeloFavoritos,     usuarioService.getUsuario().getFavoritos());
-        carregarModelo(modeloAssistidas,    usuarioService.getUsuario().getAssistidas());
-        carregarModelo(modeloQueroAssistir, usuarioService.getUsuario().getQueroAssistir());
+        carregarModelo(modeloAssistidas,    usuarioService.getUsuario().getAssistidos());
+        carregarModelo(modeloQueroAssistir, usuarioService.getUsuario().getAssistir());
     }
 
     private void carregarModelo(DefaultListModel<Serie> modelo, List<Serie> series) {
@@ -195,19 +194,19 @@ public class TelaListas extends JFrame {
         }
         switch (tipoLista) {
             case "favoritos"     -> usuarioService.removerFavorito(serie);
-            case "assistidas"    -> usuarioService.removerAssistida(serie);
-            case "queroAssistir" -> usuarioService.removerQueroAssistir(serie);
+            case "assistidas"    -> usuarioService.removerAssistidos(serie);
+            case "queroAssistir" -> usuarioService.removerAssistir(serie);
         }
         modelo.removeElement(serie);
-        JOptionPane.showMessageDialog(this, "\"" + serie.getName() + "\" removida da lista.", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this, "\"" + serie.getNome() + "\" removida da lista.", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void ordenarListaAtual(String criterio) {
         int abaSelecionada = abas.getSelectedIndex();
         List<Serie> lista = switch (abaSelecionada) {
             case 0 -> usuarioService.getUsuario().getFavoritos();
-            case 1 -> usuarioService.getUsuario().getAssistidas();
-            case 2 -> usuarioService.getUsuario().getQueroAssistir();
+            case 1 -> usuarioService.getUsuario().getAssistidos();
+            case 2 -> usuarioService.getUsuario().getAssistir();
             default -> null;
         };
         if (lista == null) return;
@@ -225,9 +224,9 @@ public class TelaListas extends JFrame {
         String detalhes = String.format(
                 "Nome: %s\nIdioma: %s\nGêneros: %s\nNota: %.1f\nEstado: %s\n" +
                 "Estreia: %s\nEncerramento: %s\nEmissora: %s\n\nSinopse:\n%s",
-                serie.getName(), serie.getLanguage(), serie.getGenres(),
-                serie.getRating(), serie.getStatus(), serie.getPremiered(),
-                serie.getEnded(), serie.getNetworkName(), serie.getSummary()
+                serie.getNome(), serie.getIdioma(), serie.getGeneros(),
+                serie.getNota(), serie.getStatus(), serie.getEstreia(),
+                serie.getFim(), serie.getEmissora(), serie.getSumario()
         );
         JTextArea textArea = new JTextArea(detalhes);
         textArea.setEditable(false);
@@ -239,10 +238,9 @@ public class TelaListas extends JFrame {
 
         JScrollPane scroll = new JScrollPane(textArea);
         scroll.setPreferredSize(new Dimension(450, 350));
-        JOptionPane.showMessageDialog(this, scroll, "Detalhes: " + serie.getName(), JOptionPane.PLAIN_MESSAGE);
+        JOptionPane.showMessageDialog(this, scroll, "Detalhes: " + serie.getNome(), JOptionPane.PLAIN_MESSAGE);
     }
 
-    // botão principal (colorido)
     private JButton criarBotao(String texto, Color cor) {
         JButton btn = new JButton(texto);
         btn.setFont(new Font("Arial", Font.BOLD, 13));
@@ -259,7 +257,6 @@ public class TelaListas extends JFrame {
         return btn;
     }
 
-    // botão menor para ordenação
     private JButton criarBotaoOrdem(String texto) {
         JButton btn = new JButton(texto);
         btn.setFont(new Font("Arial", Font.PLAIN, 12));

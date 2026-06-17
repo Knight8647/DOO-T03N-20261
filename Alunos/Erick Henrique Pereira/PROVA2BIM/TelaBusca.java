@@ -1,4 +1,4 @@
-package com.erick.tvtracker.ui;
+package interfaces;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -23,13 +23,13 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 
-import com.erick.tvtracker.model.Serie;
-import com.erick.tvtracker.service.TvMazeService;
-import com.erick.tvtracker.service.UsuarioService;
+import objetos.Serie;
+import servicos.TvMazeService;
+import servicos.UsuarioServicos;
 
 public class TelaBusca extends JFrame {
 
-    private final UsuarioService usuarioService;
+    private final UsuarioServicos usuarioService;
     private final TvMazeService tvMazeService;
 
     private JTextField campoBusca;
@@ -44,7 +44,7 @@ public class TelaBusca extends JFrame {
     private static final Color TEXTO_CLARO   = new Color(220, 220, 255);
     private static final Color TEXTO_SECUNDARIO = new Color(160, 160, 200);
 
-    public TelaBusca(UsuarioService usuarioService) {
+    public TelaBusca(UsuarioServicos usuarioService) {
         this.usuarioService = usuarioService;
         this.tvMazeService = new TvMazeService();
         configurarJanela();
@@ -65,13 +65,13 @@ public class TelaBusca extends JFrame {
         painel.setBackground(BG_ESCURO);
         painel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        // --- cabeçalho ---
-        JLabel lblTitulo = new JLabel("🔍  Buscar Séries", SwingConstants.LEFT);
+        //inicio
+        JLabel lblTitulo = new JLabel("Buscar Séries", SwingConstants.LEFT);
         lblTitulo.setFont(new Font("Arial", Font.BOLD, 20));
         lblTitulo.setForeground(TEXTO_CLARO);
         lblTitulo.setBorder(BorderFactory.createEmptyBorder(0, 0, 8, 0));
 
-        // --- campo de busca ---
+        //busca
         JPanel painelBusca = new JPanel(new BorderLayout(8, 0));
         painelBusca.setBackground(BG_ESCURO);
 
@@ -92,23 +92,23 @@ public class TelaBusca extends JFrame {
         painelBusca.add(campoBusca, BorderLayout.CENTER);
         painelBusca.add(btnBuscar, BorderLayout.EAST);
 
-        // --- lista de resultados ---
+        //lista de resultados
         modeloLista = new DefaultListModel<>();
         listaSeries = new JList<>(modeloLista);
         listaSeries.setBackground(BG_MEDIO);
         listaSeries.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        // renderer elegante para cada item da lista
+        //renderer para cada item da lista
         listaSeries.setCellRenderer((list, serie, index, isSelected, cellHasFocus) -> {
             JPanel item = new JPanel(new BorderLayout(8, 2));
             item.setBorder(BorderFactory.createEmptyBorder(8, 12, 8, 12));
             item.setBackground(isSelected ? BG_SELECIONADO : (index % 2 == 0 ? BG_ITEM : BG_MEDIO));
 
-            JLabel nome = new JLabel(serie.getName());
+            JLabel nome = new JLabel(serie.getNome());
             nome.setFont(new Font("Arial", Font.BOLD, 13));
             nome.setForeground(TEXTO_CLARO);
 
-            JLabel info = new JLabel(serie.getStatus() + "  •  Estreia: " + serie.getPremiered() + "  •  Nota: " + String.format("%.1f", serie.getRating()));
+            JLabel info = new JLabel(serie.getStatus() + "  •  Estreia: " + serie.getEstreia() + "  •  Nota: " + String.format("%.1f", serie.getNota()));
             info.setFont(new Font("Arial", Font.PLAIN, 11));
             info.setForeground(TEXTO_SECUNDARIO);
 
@@ -128,16 +128,16 @@ public class TelaBusca extends JFrame {
         scrollPane.setBorder(BorderFactory.createLineBorder(new Color(60, 60, 80)));
         scrollPane.getViewport().setBackground(BG_MEDIO);
 
-        // --- botões de ação ---
+        //botões de ação
         JPanel painelInferior = new JPanel(new BorderLayout(0, 8));
         painelInferior.setBackground(BG_ESCURO);
 
         JPanel painelAcoes = new JPanel(new GridLayout(1, 3, 8, 0));
         painelAcoes.setBackground(BG_ESCURO);
 
-        JButton btnFavorito     = criarBotao("⭐ Favoritar",       new Color(180, 140, 20));
-        JButton btnAssistida    = criarBotao("✅ Já Assisti",       new Color(40, 140, 80));
-        JButton btnQueroAssistir = criarBotao("🎯 Quero Assistir", new Color(52, 120, 180));
+        JButton btnFavorito     = criarBotao("Favoritar",       new Color(180, 140, 20));
+        JButton btnAssistida    = criarBotao("Já Assisti",       new Color(40, 140, 80));
+        JButton btnQueroAssistir = criarBotao("Quero Assistir", new Color(52, 120, 180));
 
         btnFavorito.addActionListener(e -> adicionarNaLista("favoritos"));
         btnAssistida.addActionListener(e -> adicionarNaLista("assistidas"));
@@ -215,9 +215,9 @@ public class TelaBusca extends JFrame {
         String detalhes = String.format(
                 "Nome: %s\nIdioma: %s\nGêneros: %s\nNota: %.1f\nEstado: %s\n" +
                 "Estreia: %s\nEncerramento: %s\nEmissora: %s\n\nSinopse:\n%s",
-                serie.getName(), serie.getLanguage(), serie.getGenres(),
-                serie.getRating(), serie.getStatus(), serie.getPremiered(),
-                serie.getEnded(), serie.getNetworkName(), serie.getSummary()
+                serie.getNome(), serie.getIdioma(), serie.getGeneros(),
+                serie.getNota(), serie.getStatus(), serie.getEstreia(),
+                serie.getFim(), serie.getEmissora(), serie.getSumario()
         );
 
         JTextArea textArea = new JTextArea(detalhes);
@@ -231,7 +231,7 @@ public class TelaBusca extends JFrame {
         JScrollPane scroll = new JScrollPane(textArea);
         scroll.setPreferredSize(new Dimension(450, 350));
 
-        JOptionPane.showMessageDialog(this, scroll, "Detalhes: " + serie.getName(), JOptionPane.PLAIN_MESSAGE);
+        JOptionPane.showMessageDialog(this, scroll, "Detalhes: " + serie.getNome(), JOptionPane.PLAIN_MESSAGE);
     }
 
     private void adicionarNaLista(String lista) {
@@ -242,9 +242,9 @@ public class TelaBusca extends JFrame {
         }
         switch (lista) {
             case "favoritos"     -> usuarioService.adicionarFavorito(serie);
-            case "assistidas"    -> usuarioService.adicionarAssistida(serie);
-            case "queroAssistir" -> usuarioService.adicionarQueroAssistir(serie);
+            case "assistidas"    -> usuarioService.adicionarAssistidos(serie);
+            case "queroAssistir" -> usuarioService.adicionarAssistir(serie);
         }
-        JOptionPane.showMessageDialog(this, "\"" + serie.getName() + "\" adicionada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this, "\"" + serie.getNome() + "\" adicionada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
     }
 }

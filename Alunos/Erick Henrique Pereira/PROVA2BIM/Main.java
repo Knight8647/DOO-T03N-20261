@@ -1,10 +1,8 @@
-package com.erick.tvtracker;
-
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-import com.erick.tvtracker.service.UsuarioService;
-import com.erick.tvtracker.ui.TelaPrincipal;
+import interfaces.TelaPrincipal;
+import servicos.UsuarioServicos;
 
 public class Main {
 
@@ -13,7 +11,7 @@ public class Main {
         // garante que a interface gráfica seja criada na thread correta do Swing
         SwingUtilities.invokeLater(() -> {
 
-            UsuarioService usuarioService = new UsuarioService();
+            UsuarioServicos usuarioService = new UsuarioServicos();
 
             // se for a primeira vez (sem nome salvo), pede o nome do usuário
             if (usuarioService.getUsuario().getNome() == null ||
