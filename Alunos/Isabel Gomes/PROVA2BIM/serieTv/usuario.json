@@ -1,0 +1,98 @@
+{
+  "nome": "Isa",
+  "favoritos": [
+    {
+      "nome": "Star Trek",
+      "id": 490,
+      "idioma": "English",
+      "generos": [
+        "Action",
+        "Adventure",
+        "Science-Fiction"
+      ],
+      "notaGeral": 8.4,
+      "status": "Ended",
+      "dataInicio": "1966-09-08",
+      "dataFim": "1969-06-03",
+      "emissora": "NBC"
+    },
+    {
+      "nome": "Sons of Anarchy",
+      "id": 76,
+      "idioma": "English",
+      "generos": [
+        "Drama",
+        "Action",
+        "Crime"
+      ],
+      "notaGeral": 8.3,
+      "status": "Ended",
+      "dataInicio": "2008-09-03",
+      "dataFim": "2014-12-09",
+      "emissora": "FX"
+    }
+  ],
+  "desejaAssistir": [
+    {
+      "nome": "Criminal Minds",
+      "id": 81,
+      "idioma": "English",
+      "generos": [
+        "Drama",
+        "Crime",
+        "Thriller"
+      ],
+      "notaGeral": 8.1,
+      "status": "Running",
+      "dataInicio": "2005-09-22",
+      "dataFim": "Não informado",
+      "emissora": "Paramount+"
+    },
+    {
+      "nome": "The Mentalist",
+      "id": 116,
+      "idioma": "English",
+      "generos": [
+        "Drama",
+        "Crime",
+        "Mystery"
+      ],
+      "notaGeral": 8.2,
+      "status": "Ended",
+      "dataInicio": "2008-09-23",
+      "dataFim": "2015-02-18",
+      "emissora": "CBS"
+    }
+  ],
+  "assistidas": [
+    {
+      "nome": "Pride and Prejudice",
+      "id": 2355,
+      "idioma": "English",
+      "generos": [
+        "Drama",
+        "Romance"
+      ],
+      "notaGeral": 8.0,
+      "status": "Ended",
+      "dataInicio": "1995-09-24",
+      "dataFim": "1995-10-29",
+      "emissora": "BBC One"
+    },
+    {
+      "nome": "Peaky Blinders",
+      "id": 269,
+      "idioma": "English",
+      "generos": [
+        "Drama",
+        "Crime",
+        "History"
+      ],
+      "notaGeral": 8.5,
+      "status": "Running",
+      "dataInicio": "2013-09-12",
+      "dataFim": "Não informado",
+      "emissora": "BBC One"
+    }
+  ]
+}
